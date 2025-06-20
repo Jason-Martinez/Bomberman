@@ -38,6 +38,7 @@ class Retro_star_screen:
             widget_alignment=pygame_menu.locals.ALIGN_CENTER, # alineación de widgets
             widget_margin=(0, 20)
         )
+        
 
         menu = pygame_menu.Menu(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, theme=theme)
         
