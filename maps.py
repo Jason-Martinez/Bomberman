@@ -1,5 +1,5 @@
 from scripts.paths_list import get_path
-from cords_indestructible import *
+from constans import MAP1_INDESTRUCTIBLE, MAP2_INDESTRUCTIBLE, MAP3_INDESTRUCTIBLE, MAP4_INDESTRUCTIBLE
 import random
 import pygame
 import os
