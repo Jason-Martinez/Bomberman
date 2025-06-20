@@ -7,13 +7,13 @@ import pygame_menu.themes
 #CONSTANTES
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
-TITLE = "   Bomberman"
+TITLE = "   Bomberman" 
 
 # COLORES (RGB)
 COLOR_FONDO = (0, 0, 0)
 COLOR_TITULO = (255, 255, 0)
 COLOR_TEXTO = (255, 255, 255)
-
+WHITE = (255,255,255)
 
 FUENTE_RETRO = pygame_menu.font.FONT_8BIT
 
@@ -66,7 +66,20 @@ class Retro_star_screen:
         print("starting game")
 
     def settings_game(self):
-        print("Showing settings")
+        running = True
+        font = pygame.font.SysFont(None, 48)
+        text = font.render("Audio Settings", True, (WHITE))
+        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
+        while running:
+            self.surface.fill(COLOR_FONDO)
+            self.surface.blit(text, text_rect)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                    running = False
+            pygame.display.flip()
 
     def show_scores(self):
         print("Showing scores")
