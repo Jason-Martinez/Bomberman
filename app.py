@@ -7,7 +7,7 @@ import pygame_menu.themes
 #CONSTANTES
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
-TITLE = "Bomberman"
+TITLE = "   Bomberman"
 
 # COLORES (RGB)
 COLOR_FONDO = (0, 0, 0)
@@ -45,6 +45,7 @@ class Retro_star_screen:
         menu.add.button("PLAY", self.start_game)
         menu.add.button("SETTINGS", self.settings_game)
         menu.add.button("BEST SCORES", self.show_scores)
+        menu.add.button("About", self.creators_information)
         menu.add.button("EXIT", pygame_menu.events.EXIT)
 
         return menu
@@ -69,6 +70,9 @@ class Retro_star_screen:
 
     def show_scores(self):
         print("Showing scores")
+
+    def creators_information(self):
+        print("Showing information")
 
 if __name__ == '__main__':
     Retro_star_screen()
