@@ -70,15 +70,45 @@ class Retro_star_screen:
         font = pygame.font.SysFont(None, 48)
         text = font.render("Audio Settings", True, (WHITE))
         text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
+
+        #Estado del sonido
+        sound_on = True
+
+        #boton de sonido
+        button_font = pygame.font.SysFont(None,36)
+        def get_button_text():
+            return "Sound: ON" if sound_on else "Sound: OFF"
+        button_text = button_font.render(get_button_text(), True, WHITE)
+        button_rect = pygame.Rect(WINDOW_WIDTH // 2 - 80, 150, 160, 50)
+
+        #boton de volver
+        back_button_rect = pygame.Rect(WINDOW_WIDTH // 2 - 60, 300, 120, 40)   
+        back_text = button_font.render("Back", True, WHITE)     
+
+
         while running:
             self.surface.fill(COLOR_FONDO)
             self.surface.blit(text, text_rect)
+            #dibuja el boton
+            pygame.draw.rect(self.surface, (70,136, 180), button_rect)
+            button_text = button_font.render(get_button_text(), True, WHITE)
+            self.surface.blit(button_text, (button_rect.x + 15, button_rect.y + 10))
+            #boton volver
+            pygame.draw.rect(self.surface, (180, 70, 70), back_button_rect)
+            self.surface.blit(back_text, (back_button_rect.x + 20, back_button_rect.y + 5))
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.KEYDOWN:
                     running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if button_rect.collidepoint(event.pos):
+                        sound_on = not sound_on #cambia el estado del sonido
+                    if back_button_rect.collidepoint(event.pos):
+                        running = False
+            
             pygame.display.flip()
 
     def show_scores(self):
