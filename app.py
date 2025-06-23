@@ -1,5 +1,4 @@
 import pygame
-import pygame.midi
 import pygame_menu
 import pygame_menu.events
 import pygame_menu.locals
@@ -16,7 +15,7 @@ COLOR_TITULO = (255, 255, 0)
 COLOR_TEXTO = (255, 255, 255)
 WHITE = (255,255,255)
 
-FUENTE_RETRO = pygame_menu.font.FONT_8BIT
+FUENTE_RETRO = pygame_menu.font.FONT_8BIT   #esta es la fuente que llevara todo el juego
 
 class Retro_star_screen:
     def __init__(self):
@@ -72,7 +71,7 @@ class Retro_star_screen:
 
     def settings_game(self):
         running = True
-        font = pygame.font.SysFont(None, 48)
+        font = pygame.font.Font(FUENTE_RETRO, 30)
         text = font.render("Audio Settings", True, (WHITE))
         text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
 
@@ -80,7 +79,7 @@ class Retro_star_screen:
         sound_on = pygame.mixer.music.get_busy() #true si la musica esta sonando
 
         #boton de sonido
-        button_font = pygame.font.SysFont(None,36)
+        button_font = pygame.font.Font(FUENTE_RETRO,16)
         def get_button_text():
             return "Sound: ON" if sound_on else "Sound: OFF"
         button_text = button_font.render(get_button_text(), True, WHITE)
@@ -122,7 +121,37 @@ class Retro_star_screen:
             pygame.display.flip()
 
     def show_scores(self):
-        print("Showing scores")
+        running = True
+        font = pygame.font.Font(FUENTE_RETRO, 30)
+        text = font.render("Best Scores", True, WHITE)
+        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50))
+
+        # Botón volver: debajo del texto, alineado a la izquierda con margen
+        button_font = pygame.font.Font(FUENTE_RETRO, 16)
+        back_button_x = 30  # margen izquierdo
+        back_button_y = text_rect.bottom + 30  # debajo del texto, con margen
+        back_button_rect = pygame.Rect(back_button_x, back_button_y, 120, 40)
+        back_text = button_font.render("Back", True, WHITE)
+        
+        while running:
+            self.surface.fill(COLOR_FONDO)
+            self.surface.blit(text, text_rect)
+            pygame.draw.rect(self.surface, (180,70,70), back_button_rect)
+            self.surface.blit(back_text, (back_button_rect.x + 20, back_button_rect.y + 5))
+            
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if back_button_rect.collidepoint(event.pos):
+                        running = False
+
+            pygame.display.flip()
+
 
     def creators_information(self):
         print("Showing information")
