@@ -1,4 +1,5 @@
 import pygame
+import pygame.midi
 import pygame_menu
 import pygame_menu.events
 import pygame_menu.locals
@@ -20,6 +21,10 @@ FUENTE_RETRO = pygame_menu.font.FONT_8BIT
 class Retro_star_screen:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init() #inicializa el mixer de sonido
+        pygame.mixer.music.load("Bomberman/assets/sounds/background_music.mp3")#carga la música
+        pygame.mixer.music.play(-1)
+
         self.surface = pygame.display.set_mode((WINDOW_WIDTH,WINDOW_HEIGHT))
         pygame.display.set_caption(TITLE)
         self.menu = self.create_menu()
@@ -72,7 +77,7 @@ class Retro_star_screen:
         text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
 
         #Estado del sonido
-        sound_on = True
+        sound_on = pygame.mixer.music.get_busy() #true si la musica esta sonando
 
         #boton de sonido
         button_font = pygame.font.SysFont(None,36)
@@ -105,7 +110,12 @@ class Retro_star_screen:
                     running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if button_rect.collidepoint(event.pos):
-                        sound_on = not sound_on #cambia el estado del sonido
+                        if sound_on:
+                            pygame.mixer.music.pause()
+                            sound_on = False
+                        else:
+                            pygame.mixer.music.unpause()
+                            sound_on = True
                     if back_button_rect.collidepoint(event.pos):
                         running = False
             
