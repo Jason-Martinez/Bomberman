@@ -11,7 +11,7 @@ WINDOW_HEIGHT = 600
 TITLE = "   Bomberman" 
 
 # COLORES (RGB)
-COLOR_FONDO = (0, 0, 0)
+COLOR_FONDO = (50, 50, 100)
 COLOR_TITULO = (255, 255, 0)
 COLOR_TEXTO = (255, 255, 255)
 WHITE = (255,255,255)
@@ -151,13 +151,11 @@ class Retro_star_screen:
                 line = f"{i+1}. {name:<10} {score:>4} pts"
                 score_text = font.render(line, True, WHITE)
                 self.surface.blit(score_text, (WINDOW_WIDTH // 2 - 150, 100 + i * 40))
-
-
-
+            #boton de vovler
             pygame.draw.rect(self.surface, (180,70,70), back_button_rect)
             self.surface.blit(back_text, (back_button_rect.x + 20, back_button_rect.y + 5))
             
-
+    
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
