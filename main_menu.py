@@ -8,7 +8,7 @@ from user_manager import Users_data
 #CONSTANTES
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
-TITLE = "   Bomberman" 
+TITLE = "             Bomberman" 
 
 # COLORES (RGB)
 COLOR_FONDO = (50, 50, 100)  
@@ -16,7 +16,7 @@ COLOR_TITULO = (255, 255, 0)
 COLOR_TEXTO = (255, 255, 255)
 WHITE = (255,255,255)
 
-FUENTE_RETRO = pygame_menu.font.FONT_8BIT   #esta es la fuente que llevara todo el juego
+FUENTE_RETRO = "Bomberman/assets/fonts/Minecraftia-Regular.ttf"   #esta es la fuente que llevara todo el juego
 
 class Retro_star_screen:
     def __init__(self):
@@ -187,19 +187,96 @@ class Retro_star_screen:
 
     def creators_information(self):
         running = True
-        font = pygame.font.Font(FUENTE_RETRO, 30)
-        text = font.render("ABOUT THE CREATORS ", True, (WHITE))
-        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
+
+        #cargar fuentes
+        font_title = pygame.font.Font(FUENTE_RETRO, 28)
+        font_text = pygame.font.Font(FUENTE_RETRO, 18)
+        font_mini = pygame.font.Font(FUENTE_RETRO, 16)
+
+        #cargar imagenes de los autores
+        try:
+            img_mainor = pygame.image.load("Bomberman/assets/images/Mainor.jpg")
+            img_jason = pygame.image.load("Bomberman/assets/images/Jason.jpg")
+        except Exception as e:
+            img_mainor = img_jason = pygame.Surface((100,100))
+            img_mainor.fill((100,100,100)) #relleno por defecto
+            img_jason.fill(100,100,100)
+        
+        img_mainor = pygame.transform.scale(img_mainor, (100, 100))
+        img_jason = pygame.transform.scale(img_jason, (100, 100))
+        
+        #titulo
+        title_text = font_title.render("ABOUT & HELP", True, WHITE)
+        title_rect = title_text.get_rect(center=(WINDOW_WIDTH // 2, 40))
+
+        #texto
+        info_lines = [
+            "Instituto Tecnológico de Costa Rica",
+            "Carrera: Ingeniería en Computación",
+            "Curso: Introducción a la Programación",
+            "Profesor: Diego Mora Rojas",
+            "País: Costa Rica",
+            "Versión 1.0 - Junio 2025",
+            "",
+            "controles del Juego:",
+            "W - Mover arriba",
+            "A - Mover izquierda",
+            "S - Mover abajo",
+            "D - Mover derecha",
+            "Espacio - Colocar Bomba"
+            "",
+            "Objetivo: Encuentra la llave y abre la puerta.",
+            "Evita trampas y enemigos, y usa tus ítems estratégicamente."
+        ]
+
+
+        #boton de volver
+        button_font = pygame.font.Font(FUENTE_RETRO, 16)
+        back_button_rect = pygame.Rect(WINDOW_WIDTH - 160, 520, 120, 40)
+        back_text = button_font.render("BACK", True, WHITE)
 
         while running:
             self.surface.fill(COLOR_FONDO)
-            self.surface.blit(text, text_rect)
+            self.surface.blit(title_text, title_rect)
 
+            #Mostrar imagenes
+            self.surface.blit(img_mainor, (80, 80))
+            self.surface.blit(img_jason, (WINDOW_WIDTH - 180, 80))
+
+            # Nombres y carnets debajo de cada foto
+            name1 = font_mini.render("Mainor Oliver Martinez Sanchez", True, WHITE)
+            id1 = font_mini.render("Carnet: 2022000001", True, WHITE)
+            name2 = font_mini.render("Jason Rene Martinez Gutierrez", True, WHITE)
+            id2 = font_mini.render("Carnet: 2022000002", True, WHITE)
+
+            # Debajo de la foto izquierda
+            self.surface.blit(name1, (50, 185))
+            self.surface.blit(id1, (50, 205))
+
+            # Debajo de la foto derecha
+            self.surface.blit(name2, (WINDOW_WIDTH - 310, 185))
+            self.surface.blit(id2, (WINDOW_WIDTH - 310, 205))
+
+            for i, line in enumerate(info_lines):
+                y = 260 + i * 22 
+                if y < WINDOW_HEIGHT - 60:
+                    line_render = font_text.render(line, True, WHITE)
+                    self.surface.blit(line_render, (60, y))
+
+            #boton volver
+            pygame.draw.rect(self.surface, (200, 70, 70), back_button_rect)
+            self.surface.blit(back_text, (back_button_rect.x + 20, back_button_rect.y + 5))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if back_button_rect.collidepoint(event.pos):
+                        running = False
 
             pygame.display.flip()            
 
