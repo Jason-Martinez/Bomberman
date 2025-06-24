@@ -3,6 +3,7 @@ import pygame_menu
 import pygame_menu.events
 import pygame_menu.locals
 import pygame_menu.themes
+from user_manager import Users_data
 
 #CONSTANTES
 WINDOW_WIDTH = 800
@@ -126,6 +127,11 @@ class Retro_star_screen:
         text = font.render("Best Scores", True, WHITE)
         text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50))
 
+        #obtener el top 5 usando User_data
+        user = Users_data("")
+        top5= user.get_top5()
+        
+
         # Botón volver: debajo del texto, alineado a la izquierda con margen
         button_font = pygame.font.Font(FUENTE_RETRO, 16)
         back_button_x = 30  # margen izquierdo
@@ -136,6 +142,15 @@ class Retro_star_screen:
         while running:
             self.surface.fill(COLOR_FONDO)
             self.surface.blit(text, text_rect)
+
+            
+
+            #Mostrar los puntajes
+            for i, entry in enumerate(top5):
+                score_text = font.render(f"{i+1}. {entry['user']}: {entry['score']}", True, WHITE)
+                self.surface.blit(score_text, (WINDOW_WIDTH // 2 - 100, 100 + i * 40))
+
+
             pygame.draw.rect(self.surface, (180,70,70), back_button_rect)
             self.surface.blit(back_text, (back_button_rect.x + 20, back_button_rect.y + 5))
             
