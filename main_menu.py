@@ -123,9 +123,9 @@ class Retro_star_screen:
 
     def show_scores(self):
         running = True
-        font = pygame.font.Font(FUENTE_RETRO, 30)
-        text = font.render("Best Scores", True, WHITE)
-        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50))
+        font = pygame.font.Font(FUENTE_RETRO, 25)
+        title_text = font.render("Best Scores", True, WHITE)
+        text_rect = title_text.get_rect(center=(WINDOW_WIDTH // 2, 50))
 
         #obtener el top 5 usando User_data
         user = Users_data("")
@@ -141,14 +141,17 @@ class Retro_star_screen:
         
         while running:
             self.surface.fill(COLOR_FONDO)
-            self.surface.blit(text, text_rect)
+            self.surface.blit(title_text, text_rect)
 
-            
-
-            #Mostrar los puntajes
+            # Mostrar los puntajes alineados manualmente sin usar ':' que puede generar errores visuales
             for i, entry in enumerate(top5):
-                score_text = font.render(f"{i+1}. {entry['user']}: {entry['score']}", True, WHITE)
-                self.surface.blit(score_text, (WINDOW_WIDTH // 2 - 100, 100 + i * 40))
+                name = entry['user']
+                score = entry['score']
+                # Alineación manual: nombre a la izquierda con 10 espacios, score a la derecha
+                line = f"{i+1}. {name:<10} {score:>4} pts"
+                score_text = font.render(line, True, WHITE)
+                self.surface.blit(score_text, (WINDOW_WIDTH // 2 - 150, 100 + i * 40))
+
 
 
             pygame.draw.rect(self.surface, (180,70,70), back_button_rect)
