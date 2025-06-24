@@ -68,7 +68,22 @@ class Retro_star_screen:
             pygame.display.flip()
     
     def start_game(self):
-        print("starting game")
+        running = True
+        font = pygame.font.Font(FUENTE_RETRO, 30)
+        text = font.render("USER REGISTRATION ", True, (WHITE))
+        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
+
+        while running:
+            self.surface.fill(COLOR_FONDO)
+            self.surface.blit(text, text_rect)
+
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+            pygame.display.flip() 
 
     def settings_game(self):
         running = True
