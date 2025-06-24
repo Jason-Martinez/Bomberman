@@ -11,7 +11,7 @@ WINDOW_HEIGHT = 600
 TITLE = "   Bomberman" 
 
 # COLORES (RGB)
-COLOR_FONDO = (50, 50, 100)
+COLOR_FONDO = (50, 50, 100)  
 COLOR_TITULO = (255, 255, 0)
 COLOR_TEXTO = (255, 255, 255)
 WHITE = (255,255,255)
@@ -82,13 +82,13 @@ class Retro_star_screen:
         #boton de sonido
         button_font = pygame.font.Font(FUENTE_RETRO,16)
         def get_button_text():
-            return "Sound: ON" if sound_on else "Sound: OFF"
+            return "SOUND: ON" if sound_on else "SOUND: OFF"
         button_text = button_font.render(get_button_text(), True, WHITE)
         button_rect = pygame.Rect(WINDOW_WIDTH // 2 - 80, 150, 160, 50)
 
         #boton de volver
         back_button_rect = pygame.Rect(WINDOW_WIDTH // 2 - 60, 300, 120, 40)   
-        back_text = button_font.render("Back", True, WHITE)     
+        back_text = button_font.render("BACK", True, WHITE)     
 
 
         while running:
@@ -124,7 +124,7 @@ class Retro_star_screen:
     def show_scores(self):
         running = True
         font = pygame.font.Font(FUENTE_RETRO, 25)
-        title_text = font.render("Best Scores", True, WHITE)
+        title_text = font.render("BEST SCORES", True, WHITE)
         text_rect = title_text.get_rect(center=(WINDOW_WIDTH // 2, 50))
 
         #obtener el top 5 usando User_data
@@ -137,7 +137,7 @@ class Retro_star_screen:
         back_button_x = 30  # margen izquierdo
         back_button_y = text_rect.bottom + 30  # debajo del texto, con margen
         back_button_rect = pygame.Rect(back_button_x, back_button_y, 120, 40)
-        back_text = button_font.render("Back", True, WHITE)
+        back_text = button_font.render("BACK", True, WHITE)
         
         while running:
             self.surface.fill(COLOR_FONDO)
@@ -171,7 +171,22 @@ class Retro_star_screen:
 
 
     def creators_information(self):
-        print("Showing information")
+        running = True
+        font = pygame.font.Font(FUENTE_RETRO, 30)
+        text = font.render("ABOUT THE CREATORS ", True, (WHITE))
+        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
+
+        while running:
+            self.surface.fill(COLOR_FONDO)
+            self.surface.blit(text, text_rect)
+
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
+            pygame.display.flip()            
 
 if __name__ == '__main__':
     Retro_star_screen()
