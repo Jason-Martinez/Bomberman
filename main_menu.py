@@ -160,7 +160,8 @@ class Retro_star_screen:
                     pygame.quit()
                     exit()
                 if event.type == pygame.KEYDOWN:
-                    running = False
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if back_button_rect.collidepoint(event.pos):
                         running = False
