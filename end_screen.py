@@ -1,5 +1,4 @@
 import pygame
-import pygame_menu
 from main_menu import Retro_star_screen
 # Configuración básica
 WINDOW_WIDTH = 800

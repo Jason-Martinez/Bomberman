@@ -49,7 +49,7 @@ class Retro_star_screen:
 
         menu = pygame_menu.Menu(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, theme=theme)
         
-        menu.add.button("PLAY", self.start_game)
+        menu.add.button("START", self.start_game)
         menu.add.button("SETTINGS", self.settings_game)
         menu.add.button("BEST SCORES", self.show_scores)
         menu.add.button("About", self.creators_information)
