@@ -1,3 +1,30 @@
+from scripts.paths_list import get_path
+import pygame
+import os
+
+#Scalas y tamaño de pantalla, celdas, personajes, etc.
+WIDTH = 800
+HEIGHT = 640
+CELL_SIZE = 32
+PERSON_SCALE = 32
+EXPLOTION_SCALE = 50
+OFFSET_Y = 64
+ROWS = 18
+COLS = 25
+
+#Colores
+COLORS = {
+    'WHITE': (255, 255, 255),
+    'BLACK': (0, 0, 0),
+    'RED': (255, 0, 0),
+    'GREEN': (0, 255, 0),
+    'GRAY': (128, 128, 128)
+}
+
+#Barras
+BAR_LEN = 150
+BAR_HEIGHT = 20
+
 # =======================================================================================================
 # *                               Assets indestructibles de los mapas                                   *
 # =======================================================================================================
@@ -73,25 +100,15 @@ MAP4_INDESTRUCTIBLE = [
     (23, 3)
 ]
 
-#Scalas y tamaño de pantalla, celdas, personajes, etc.
-WIDTH = 800
-HEIGHT = 640
-CELL_SIZE = 32
-PERSON_SCALE = 32
-EXPLOTION_SCALE = 50
-OFFSET_Y = 64
-ROWS = 18
-COLS = 25
-
-#Colores
-COLORS = {
-    'WHITE': (255, 255, 255),
-    'BLACK': (0, 0, 0),
-    'RED': (255, 0, 0),
-    'GREEN': (0, 255, 0),
-    'GRAY': (128, 128, 128)
+BGS = get_path(os.path.join('Assets', 'tiles'))
+PORTAL = get_path(os.path.join('Assets', 'portal'))
+IMGS = {
+    'box': pygame.image.load(BGS[0]),
+    'grass': pygame.image.load(BGS[1]),
+    'stone': pygame.image.load(BGS[2])
 }
-
-#Barras
-BAR_LEN = 150
-BAR_HEIGHT = 20
+SCALE_IMS = {
+    'box': pygame.transform.scale(IMGS['box'], (CELL_SIZE, CELL_SIZE)),
+    'grass': pygame.transform.scale(IMGS['grass'], (CELL_SIZE, CELL_SIZE)),
+    'stone': pygame.transform.scale(IMGS['stone'], (CELL_SIZE, CELL_SIZE))
+}

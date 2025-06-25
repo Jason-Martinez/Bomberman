@@ -1,6 +1,6 @@
 import pygame
 from scripts.load_animations import characters, all_animations
-from constans import OFFSET_Y
+import constans
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, row, col, grid, screen, tile_size, hp=100):
@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
 
         # --- Conversion de posiciones de la matriz en pixeles ---
         self.posi_x = self.col * self.tile_size
-        self.posi_y = OFFSET_Y + self.row * self.tile_size
+        self.posi_y = constans.OFFSET_Y + self.row * self.tile_size
         
         # --- Variables para controlar el movimiento celda a celda ---
         self.move_delay = 350 
@@ -70,7 +70,7 @@ class Player(pygame.sprite.Sprite):
                     self.col = new_col
                     self.grid[self.row][self.col] = 'J'
                     self.posi_x = self.col * self.tile_size
-                    self.posi_y = OFFSET_Y + self.row * self.tile_size
+                    self.posi_y = constans.OFFSET_Y + self.row * self.tile_size
                     self.rect.topleft = (self.posi_x, self.posi_y)
                     self.last_move = current_time
                     self.frame = (self.frame + 1) % len(self.animations[self.direction])
@@ -96,7 +96,7 @@ class Explosion(pygame.sprite.Sprite):
         self.col = col
         self.tile_size = tile_size
         self.pixel_x = self.col * self.tile_size
-        self.pixel_y = OFFSET_Y + self.row * self.tile_size
+        self.pixel_y = constans.OFFSET_Y + self.row * self.tile_size
 
         self.explosion_frames = explosion_frames
         self.explosion_frame_delay = 100  # ms por frame
@@ -131,7 +131,7 @@ class Bomb(pygame.sprite.Sprite):
         self.tile_size = tile_size
         self.all_sprites = all_sprites  # Grupo de sprites para agregar explosiones
 
-        self.pixel_x, self.pixel_y = self.col * self.tile_size, OFFSET_Y + self.row * self.tile_size
+        self.pixel_x, self.pixel_y = self.col * self.tile_size, constans.OFFSET_Y + self.row * self.tile_size
         self.rect = pygame.Rect(self.pixel_x, self.pixel_y, self.tile_size, self.tile_size)
 
         self.explosion_time_ms = 3000  # Tiempo hasta que la bomba detona (3 segundos)
