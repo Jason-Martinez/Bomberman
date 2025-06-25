@@ -14,6 +14,7 @@ TITLE = "             Bomberman"
 COLOR_FONDO = (50, 50, 100)  
 COLOR_TITULO = (255, 255, 0)
 COLOR_TEXTO = (255, 255, 255)
+AMARILLO = (255,255,0)
 WHITE = (255,255,255)
 
 FUENTE_RETRO = "Bomberman/assets/fonts/Minecraftia-Regular.ttf"   #esta es la fuente que llevara todo el juego
@@ -41,7 +42,8 @@ class Retro_star_screen:
             widget_font_size=30,
             widget_font_color=COLOR_TEXTO,
             widget_alignment=pygame_menu.locals.ALIGN_CENTER, # alineación de widgets
-            widget_margin=(0, 20)
+            widget_margin=(0, 20),
+            selection_color=(255, 255, 0)  # Color de fondo al hacer hover (amarillo)
         )
         
 

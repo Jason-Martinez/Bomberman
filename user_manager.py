@@ -2,7 +2,7 @@ import json
 
 
 class Users_data:
-    def __init__(self,username, file_path="Bomberman/assets/scores.json"):
+    def __init__(self,username, file_path="Bomberman/assets/data/scores.json"):
         self.username = username.strip()
         self.file_path = file_path
         
