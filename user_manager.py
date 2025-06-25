@@ -32,7 +32,7 @@ class Users_data:
         
         else:
             data.append(Users_data)
-        self.save_data()
+        self.save_data(data)
 
 
             

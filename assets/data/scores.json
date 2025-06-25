@@ -1,8 +1,22 @@
 [
-    {"user": "Alice", "score": 1000},
-    {"user": "Bob", "score": 900},
-    {"user": "Charlie", "score": 800},
-    {"user": "Dana", "score": 700},
-    {"user": "Eve", "score": 600},
-    {"user": "Mainor", "score": 1001}
+    {
+        "user": "Mainor",
+        "score": 400,
+        "skin": 1
+    },
+    {
+        "user": "eve",
+        "score": 100,
+        "skin": 0
+    },
+    {
+        "user": "Jason",
+        "score": 800,
+        "skin": 1
+    },
+    {
+        "user": "Juan",
+        "score": 400,
+        "skin": 0
+    }
 ]

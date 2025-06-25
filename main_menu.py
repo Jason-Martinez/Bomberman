@@ -4,6 +4,7 @@ import pygame_menu.events
 import pygame_menu.locals
 import pygame_menu.themes
 from user_manager import Users_data
+import json
 
 #CONSTANTES
 WINDOW_WIDTH = 800
@@ -45,11 +46,11 @@ class Retro_star_screen:
             widget_margin=(0, 20),
             selection_color=(255, 255, 0)  # Color de fondo al hacer hover (amarillo)
         )
-        
 
         menu = pygame_menu.Menu(TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, theme=theme)
         
-        menu.add.button("START", self.start_game)
+        menu.add.button("START", self.start_game),
+        menu.add.button("PERSONALIZATION", self.personalization_screen)
         menu.add.button("SETTINGS", self.settings_game)
         menu.add.button("BEST SCORES", self.show_scores)
         menu.add.button("About", self.creators_information)
@@ -71,14 +72,8 @@ class Retro_star_screen:
     
     def start_game(self):
         running = True
-        font = pygame.font.Font(FUENTE_RETRO, 30)
-        text = font.render("USER REGISTRATION ", True, (WHITE))
-        text_rect = text.get_rect(center=(WINDOW_WIDTH // 2, 50)) #centrado arriba (y=50)
 
         while running:
-            self.surface.fill(COLOR_FONDO)
-            self.surface.blit(text, text_rect)
-
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -138,6 +133,113 @@ class Retro_star_screen:
             
             pygame.display.flip()
 
+    def personalization_screen(self):
+        import pygame
+        from user_manager import Users_data
+
+        running = True
+        selected_skin = 0
+        player_name = ""
+        input_active = False
+
+        # Cargar y escalar skins
+        skin_paths = [
+            "Bomberman/assets/skins/skin1.png",
+            "Bomberman/assets/skins/skin2.png",
+            "Bomberman/assets/skins/skin3.png"
+        ]
+        img_size = int(WINDOW_HEIGHT * 0.18)
+        skins = [pygame.transform.scale(pygame.image.load(path), (img_size, img_size)) for path in skin_paths]
+        skin_names = ["Red", "Blue", "Green"]
+
+        # Fuentes
+        title_font = pygame.font.Font(FUENTE_RETRO, 32)
+        label_font = pygame.font.Font(FUENTE_RETRO, 20)
+        input_font = pygame.font.Font(FUENTE_RETRO, 22)
+        button_font = pygame.font.Font(FUENTE_RETRO, 18)
+
+        # Botones
+        btn_w, btn_h = 120, 40
+        confirm_rect = pygame.Rect(WINDOW_WIDTH//2 - btn_w//2, int(WINDOW_HEIGHT*0.80), btn_w, btn_h)
+        back_rect = pygame.Rect(WINDOW_WIDTH//2 - btn_w//2, int(WINDOW_HEIGHT*0.87), btn_w, btn_h)
+
+        while running:
+            self.surface.fill(COLOR_FONDO)
+
+            # Título
+            title = title_font.render("Personalization", True, COLOR_TITULO)
+            self.surface.blit(title, (WINDOW_WIDTH//2 - title.get_width()//2, 30))
+
+            # Nombre del jugador
+            label = label_font.render("Player Name:", True, WHITE)
+            self.surface.blit(label, (WINDOW_WIDTH//2 - 180, 110))
+            # Caja de texto
+            input_box = pygame.Rect(WINDOW_WIDTH//2 - 60, 105, 220, 36)
+            pygame.draw.rect(self.surface, (70, 136, 180) if input_active else (100, 100, 100), input_box, 0, border_radius=6)
+            name_surface = input_font.render(player_name, True, WHITE)
+            self.surface.blit(name_surface, (input_box.x + 10, input_box.y + 5))
+
+            # Skins
+            skin_y = 180
+            for i, img in enumerate(skins):
+                x = WINDOW_WIDTH//2 - img_size - 30 + i*(img_size + 30)
+                border_color = (255, 255, 0) if i == selected_skin else (100, 100, 100)
+                pygame.draw.rect(self.surface, border_color, (x-5, skin_y-5, img_size+10, img_size+10), 3)
+                self.surface.blit(img, (x, skin_y))
+                # Nombre del skin
+                skin_label = button_font.render(skin_names[i], True, WHITE)
+                self.surface.blit(skin_label, (x + img_size//2 - skin_label.get_width()//2, skin_y + img_size + 8))
+
+            # Instrucciones para cambiar skin
+            instr = label_font.render("←  Select Skin  →", True, WHITE)
+            self.surface.blit(instr, (WINDOW_WIDTH//2 - instr.get_width()//2, skin_y + img_size + 40))
+
+            # Botón Confirmar
+            pygame.draw.rect(self.surface, (70, 180, 70), confirm_rect, border_radius=8)
+            confirm_text = button_font.render("CONFIRM", True, WHITE)
+            self.surface.blit(confirm_text, (confirm_rect.x + btn_w//2 - confirm_text.get_width()//2, confirm_rect.y + 8))
+
+            # Botón Volver
+            pygame.draw.rect(self.surface, (180, 70, 70), back_rect, border_radius=8)
+            back_text = button_font.render("BACK", True, WHITE)
+            self.surface.blit(back_text, (back_rect.x + btn_w//2 - back_text.get_width()//2, back_rect.y + 8))
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if input_active:
+                        if event.key == pygame.K_RETURN:
+                            input_active = False
+                        elif event.key == pygame.K_BACKSPACE:
+                            player_name = player_name[:-1]
+                        elif len(player_name) < 16 and event.unicode.isprintable():
+                            player_name += event.unicode
+                    else:
+                        if event.key == pygame.K_LEFT:
+                            selected_skin = (selected_skin - 1) % len(skins)
+                        if event.key == pygame.K_RIGHT:
+                            selected_skin = (selected_skin + 1) % len(skins)
+                        if event.key == pygame.K_ESCAPE:
+                            running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_box.collidepoint(event.pos):
+                        input_active = True
+                    else:
+                        input_active = False
+                    if confirm_rect.collidepoint(event.pos):
+                        if player_name.strip() != "":
+                            # Guardar usuario usando Users_data
+                            user = Users_data(player_name.strip())
+                            user.save_or_update_user(score=0, skin=selected_skin)
+                            self.start_game()
+                            return
+                    if back_rect.collidepoint(event.pos):
+                        running = False
+
     def show_scores(self):
         running = True
         font = pygame.font.Font(FUENTE_RETRO, 25)
@@ -145,8 +247,8 @@ class Retro_star_screen:
         text_rect = title_text.get_rect(center=(WINDOW_WIDTH // 2, 50))
 
         #obtener el top 5 usando User_data
-        user = Users_data("")
-        top5= user.get_top5()
+        user_manager = Users_data("")
+        top5= user_manager.get_top5()
         
 
         # Botón volver: debajo del texto, alineado a la izquierda con margen
@@ -162,8 +264,8 @@ class Retro_star_screen:
 
             # Mostrar los puntajes alineados manualmente sin usar ':' que puede generar errores visuales
             for i, entry in enumerate(top5):
-                name = entry['user']
-                score = entry['score']
+                name = entry.get('user', '')
+                score = entry.get('score', 0)
                 # Alineación manual: nombre a la izquierda con 10 espacios, score a la derecha
                 line = f"{i+1}. {name:<10} {score:>4} pts"
                 score_text = font.render(line, True, WHITE)
