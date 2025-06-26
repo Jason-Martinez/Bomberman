@@ -75,6 +75,13 @@ class Retro_star_screen:
         running = True
 
         while running:
+            self.surface.fill(COLOR_FONDO)
+
+            label_font = pygame.font.Font(FUENTE_RETRO, 20)
+
+            if hasattr(self, "current_user") and self.current_user:
+                user_label = label_font.render(f"User: {self.current_user}", True, WHITE)
+                self.surface.blit(user_label, (10, 10))
 
 
             for event in pygame.event.get():
@@ -169,7 +176,9 @@ class Retro_star_screen:
 
         while running:
             self.surface.fill(COLOR_FONDO)
-
+            if hasattr(self, "current_user") and self.current_user:
+                user_label = label_font.render(f"User: {self.current_user}", True, WHITE)
+                self.surface.blit(user_label, (10, 10))
             # Título
             title = title_font.render("Personalization", True, COLOR_TITULO)
             self.surface.blit(title, (WINDOW_WIDTH//2 - title.get_width()//2, 30))
@@ -251,6 +260,7 @@ class Retro_star_screen:
                                  user.save_or_update_user(score=existing.get("score", 0), skin=selected_skin)
                             else:
                                 user.save_or_update_user(score=0, skin=selected_skin)
+                            self.current_user = player_name.strip()
                             msg = "Chance applied!"
                             msg_timer = pygame.time.get_ticks()
      
