@@ -2,7 +2,7 @@
     {
         "user": "Mainor",
         "score": 400,
-        "skin": 1
+        "skin": 0
     },
     {
         "user": "eve",
@@ -18,10 +18,5 @@
         "user": "Juan",
         "score": 400,
         "skin": 0
-    },
-    {
-        "user": "Mainor",
-        "score": 0,
-        "skin": 1
     }
 ]
