@@ -176,6 +176,7 @@ class Retro_star_screen:
 
         while running:
             self.surface.fill(COLOR_FONDO)
+            #pner el nombre en la esquina del usuario actual
             if hasattr(self, "current_user") and self.current_user:
                 user_label = label_font.render(f"User: {self.current_user}", True, WHITE)
                 self.surface.blit(user_label, (10, 10))
@@ -203,16 +204,16 @@ class Retro_star_screen:
                 skin_label = button_font.render(skin_names[i], True, WHITE)
                 self.surface.blit(skin_label, (x + img_size//2 - skin_label.get_width()//2, skin_y + img_size + 8))
 
-            # Instrucciones para cambiar skin
+            # Instrucciones para cambiar skin con las flechas
             instr = label_font.render("←  Select Skin  →", True, WHITE)
             self.surface.blit(instr, (WINDOW_WIDTH//2 - instr.get_width()//2, skin_y + img_size + 40))
 
-            # Botón Confirmar
+            # Botón Confirmar guarda el usuario y skin seleccionada
             pygame.draw.rect(self.surface, (70, 180, 70), confirm_rect, border_radius=8)
             confirm_text = button_font.render("CONFIRM", True, WHITE)
             self.surface.blit(confirm_text, (confirm_rect.x + btn_w//2 - confirm_text.get_width()//2, confirm_rect.y + 8))
 
-            # Botón Volver
+            # Botón Volver: guarda el usuario y skin seleccionada
             pygame.draw.rect(self.surface, (180, 70, 70), back_rect, border_radius=8)
             back_text = button_font.render("BACK", True, WHITE)
             self.surface.blit(back_text, (back_rect.x + btn_w//2 - back_text.get_width()//2, back_rect.y + 8))
@@ -231,6 +232,7 @@ class Retro_star_screen:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                    #manejo de teclas
                 if event.type == pygame.KEYDOWN:
                     if input_active:
                         if event.key == pygame.K_RETURN:
@@ -240,15 +242,18 @@ class Retro_star_screen:
                         elif len(player_name) < 16 and event.unicode.isprintable():
                             player_name += event.unicode
                     else:
+                        #cambia skin con las flechas
                         if event.key == pygame.K_LEFT:
                             selected_skin = (selected_skin - 1) % len(skins)
                         if event.key == pygame.K_RIGHT:
                             selected_skin = (selected_skin + 1) % len(skins)
+                            #salir de la pantalla de personalizacion con       ESC
                         if event.key == pygame.K_ESCAPE:
                             running = False
+                            #manejo de clics del mouse
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if input_box.collidepoint(event.pos):
-                        input_active = True
+                        input_active = True 
                     else:
                         input_active = False
                     if confirm_rect.collidepoint(event.pos):
@@ -263,7 +268,7 @@ class Retro_star_screen:
                             self.current_user = player_name.strip()
                             msg = "Chance applied!"
                             msg_timer = pygame.time.get_ticks()
-     
+                    #si se presiona el boton volver
                     if back_rect.collidepoint(event.pos):
                         running = False
 
