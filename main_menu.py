@@ -100,7 +100,7 @@ class Retro_star_screen:
         button_rect = pygame.Rect(WINDOW_WIDTH // 2 - 80, 150, 160, 50)
 
         #boton de volver
-        back_button_rect = pygame.Rect(WINDOW_WIDTH // 2 - 60, 300, 120, 40)   
+        back_button_rect = pygame.Rect(WINDOW_WIDTH - 150, WINDOW_HEIGHT - 70, 120, 40)   
         back_text = button_font.render("BACK", True, WHITE)     
 
 
