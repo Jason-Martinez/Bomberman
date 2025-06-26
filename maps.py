@@ -2,6 +2,7 @@ import constans
 import random
 
 
+
 #Constantes
 
 
@@ -29,7 +30,7 @@ class Maps:
     def _generate_map(self):
         percent = 0
         if self.level == 1:
-            percent = 0.40
+            percent = 0.05
             indestructibles = constans.MAP1_INDESTRUCTIBLE
         elif self.level == 2:
             percent = 0.35
@@ -41,8 +42,12 @@ class Maps:
             percent = 0.35
             indestructibles = constans.MAP4_INDESTRUCTIBLE
         
-        spawnPlayer = [(1,1), (1,2), (2,1), (2,2)]
+        spawnPlayer = [(1,1), (1,2), (2,1), (2,2), (3,10), (3,3)]
         #Agregando destructibles e indestructibles
+        self.genarate_objects(percent, indestructibles, spawnPlayer)
+        self.generateKey()
+        
+    def genarate_objects(self, percent, indestructibles, spawnPlayer):
         for row in range(constans.ROWS):
             for col in range(constans.COLS):
                 if (row, col) in indestructibles:
@@ -50,15 +55,25 @@ class Maps:
                 elif self.matriz[row][col] == 0: 
                     if random.random() <= percent and (row, col) not in spawnPlayer:
                         self.matriz[row][col] = 2
+    
+    def generateKey(self):
+        while True:
+            row = random.randint(0, constans.ROWS - 1)
+            col = random.randint(0, constans.COLS - 1)
+            if self.matriz[row][col] == 2:
+                self.matriz[row][col] = 'LS' #Llave secreta
+                break
 
-
-    def draw(self, tile_size):  
+    
+    def draw(self, tile_size):
+        tupla = ('J', 0, 'E')  
         for row in range(constans.ROWS):
             for col in range(constans.COLS):
                 pos_y = constans.OFFSET_Y + row * tile_size
                 if self.matriz[row][col] == 2:
                     self.surface.blit(constans.SCALE_IMS['box'], (col * tile_size, pos_y, tile_size, tile_size))
-                if self.matriz[row][col] == 0 or self.matriz[row][col] == 'J':
+                if self.matriz[row][col] in tupla:
                     self.surface.blit(constans.SCALE_IMS['grass'], (col * tile_size, pos_y, tile_size, tile_size))
                 elif self.matriz[row][col] == 1:
                     self.surface.blit(constans.SCALE_IMS['stone'], (col * tile_size, pos_y, tile_size, tile_size))
+

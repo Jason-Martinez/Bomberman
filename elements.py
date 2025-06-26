@@ -1,6 +1,7 @@
 import pygame
 from scripts.load_animations import characters, all_animations
 import constans
+import random
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, row, col, grid, screen, tile_size, hp=100):
@@ -14,20 +15,21 @@ class Player(pygame.sprite.Sprite):
         # --- Caracteristicas del jugador ---
         self.hp = hp
         self.max_hp = self.hp
+        self.existKey = False
 
         # --- Conversion de posiciones de la matriz en pixeles ---
         self.posi_x = self.col * self.tile_size
         self.posi_y = constans.OFFSET_Y + self.row * self.tile_size
         
         # --- Variables para controlar el movimiento celda a celda ---
-        self.move_delay = 350 
+        self.move_delay = 500 
         self.last_move = pygame.time.get_ticks()   
 
         # --- Variables para la animación ---
         self.animation_time = 350 
         self.last_frame_time = pygame.time.get_ticks()
         self.frame = 0 # Índice
-        self.direction = 'botton' 
+        self.direction = 'bottom' 
         
         # Cargar imágenes del personaje y sus animaciones respectivas
         self.animations = characters['StrongChar'] 
@@ -47,7 +49,7 @@ class Player(pygame.sprite.Sprite):
                 self.direction = 'top'
             elif keys[pygame.K_s]:  # Abajo
                 dy = 1
-                self.direction = 'botton'
+                self.direction = 'bottom'
             elif keys[pygame.K_a]:  # Izquierda
                 dx = -1
                 self.direction = 'left'
@@ -73,7 +75,6 @@ class Player(pygame.sprite.Sprite):
                     self.posi_y = constans.OFFSET_Y + self.row * self.tile_size
                     self.rect.topleft = (self.posi_x, self.posi_y)
                     self.last_move = current_time
-                    self.frame = (self.frame + 1) % len(self.animations[self.direction])
                     
 
             # Actualizar animación
@@ -87,7 +88,6 @@ class Player(pygame.sprite.Sprite):
             # Actualizar imagen
             self.image = self.animations[self.direction][self.frame]
 
-import pygame
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, row, col, tile_size, explosion_frames):
@@ -95,8 +95,8 @@ class Explosion(pygame.sprite.Sprite):
         self.row = row
         self.col = col
         self.tile_size = tile_size
-        self.pixel_x = self.col * self.tile_size
-        self.pixel_y = constans.OFFSET_Y + self.row * self.tile_size
+        self.x = self.col * self.tile_size
+        self.y = constans.OFFSET_Y + self.row * self.tile_size
 
         self.explosion_frames = explosion_frames
         self.explosion_frame_delay = 100  # ms por frame
@@ -107,7 +107,7 @@ class Explosion(pygame.sprite.Sprite):
 
         self.image = self.explosion_frames[0]
         self.rect = self.image.get_rect()
-        self.rect.center = (self.pixel_x + self.tile_size // 2, self.pixel_y + self.tile_size // 2)
+        self.rect.center = (self.x + self.tile_size // 2, self.y + self.tile_size // 2)
 
     def update(self):
         current_time = pygame.time.get_ticks()
@@ -122,7 +122,7 @@ class Explosion(pygame.sprite.Sprite):
             self.kill()
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, row, col, grid, screen, tile_size, player_instance_ref, all_sprites):
+    def __init__(self, row, col, grid, screen, tile_size, player_instance_ref, all_sprites, object_group, enemy_group):
         super().__init__()
         self.row = row
         self.col = col
@@ -130,9 +130,11 @@ class Bomb(pygame.sprite.Sprite):
         self.screen = screen
         self.tile_size = tile_size
         self.all_sprites = all_sprites  # Grupo de sprites para agregar explosiones
+        self.group = object_group
+        self.enemy_group = enemy_group
 
-        self.pixel_x, self.pixel_y = self.col * self.tile_size, constans.OFFSET_Y + self.row * self.tile_size
-        self.rect = pygame.Rect(self.pixel_x, self.pixel_y, self.tile_size, self.tile_size)
+        self.x, self.y = self.col * self.tile_size, constans.OFFSET_Y + self.row * self.tile_size
+        self.rect = pygame.Rect(self.x, self.y, self.tile_size, self.tile_size)
 
         self.explosion_time_ms = 3000  # Tiempo hasta que la bomba detona (3 segundos)
         self.placed_time = pygame.time.get_ticks()
@@ -230,7 +232,18 @@ class Bomb(pygame.sprite.Sprite):
                     self.player_ref.hp -= 25
                     explosion = Explosion(target_y, target_x, self.tile_size, all_animations['explotions'])
                     self.all_sprites.add(explosion)
+                elif cell_type == 'LS':
+                    llave = Key(target_x, target_y, self.tile_size)
+                    self.group.add(llave)
+                    self.all_sprites.add(llave)
+                    self._apply_destruction(target_x, target_y, grid_width, grid_height)
+                elif cell_type == 'E':
+                    for enemy in self.enemy_group:
+                        if enemy.row == target_y and enemy.col == target_x:
+                            enemy.kill()
+                            self.grid[enemy.row][enemy.col] = 0
 
+                    
     def _apply_destruction(self, x, y, grid_width, grid_height):
         """
         Aplica los efectos de la explosión a una celda específica.
@@ -240,4 +253,269 @@ class Bomb(pygame.sprite.Sprite):
 
         if self.grid[y][x] == 2:
             self.grid[y][x] = 0
+        if self.grid[y][x] == 'LS':
+            self.grid[y][x] = 0
+
+class Key(pygame.sprite.Sprite):
+    def __init__(self, col, row, tile_size):
+        super().__init__()
+        self.x = col * tile_size
+        self.y = constans.OFFSET_Y + row * tile_size
+        self.image = pygame.image.load(constans.KEY_PATH).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (tile_size, tile_size))
+        self.rect =self.image.get_rect()
+        self.rect.center = (self.x + tile_size // 2, self.y + tile_size // 2)
+    
+    def update(self):
+        self.image
+        
+class Portal(pygame.sprite.Sprite):
+    def __init__(self, col, row, tile_size):
+        super().__init__()
+        self.x = col * tile_size
+        self.y = constans.OFFSET_Y + row * tile_size
+
+        self.imgs = all_animations['portal']
+        self.frame_index = 0
+        self.last_frame = pygame.time.get_ticks()
+        self.frame_delay = 50
+
+        self.image = self.imgs[self.frame_index]
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x + tile_size // 2, self.y + tile_size // 2)
+    def update(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_frame > self.frame_delay:
+            self.frame_index = (self.frame_index + 1) % len(self.imgs)
+            self.image = self.imgs[self.frame_index]
+            self.last_frame = current_time 
+
+class Enemy(pygame.sprite.Sprite):
+    '''
+    Esta clase va contener todo los parametros necesarios para la creacion de enemigos
+    '''
+    def __init__(self, row, col, animations, tile_size):
+        super().__init__()
+        self.row = row
+        self.col = col
+        self.tile_size = tile_size
+
+        self.x = col * tile_size
+        self.y = constans.OFFSET_Y + row * tile_size
+
+        self.movement_time = 1000
+        self.last_move = pygame.time.get_ticks()
+        
+        self.frame_rate = 100
+        self.last_frame = pygame.time.get_ticks()
+        self.frame_index = 0
+        self.direction = 'bottom'
+
+        self.animations = animations
+        self.image = self.animations[self.direction][self.frame_index]
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x + tile_size // 2, self.y + tile_size // 2)
+
+class EnemyType1(Enemy):
+    '''
+    Enemigo de bajo nivel, hereda de la clase Enemy su constructor.
+    Su comportamiento es moverse de manera aleatoria, ademas de ser un enemigo pasivo
+    que no hace daño
+    '''
+    def __init__(self, row, col, grid):
+        super().__init__(row, col, characters['EasyEnemy'], constans.CELL_SIZE)
+        self.flip = False
+        self.grid = grid
+        self.grid[row][col]='E'
+
+    def update(self):
+        current_time = pygame.time.get_ticks()
+        directions = [(0,-1), (0,1), (-1,0), (1,0)]
+        direction = random.choice(directions)
+        dx = direction[0]
+        dy = direction[1]
+        if dy == -1:
+            self.direction = 'top'
+        elif dy == 1:
+            self.direction = 'bottom'
+        elif dx == -1:
+            self.direction = 'left'
+        elif dx == 1:
+            self.direction = 'right'
+        
+        if current_time - self.last_move > self.movement_time:
+            new_row = self.row + dy
+            new_col = self.col + dx
+            if self.grid[new_row][new_col] == 0:
+                print('Hubo movimiento')
+                self.grid[self.row][self.col]=0
+                self.row = new_row
+                self.col = new_col
+                self.grid[self.row][self.col]='E'
+                self.x = self.col * self.tile_size
+                self.y = constans.OFFSET_Y + self.row * self.tile_size
+                self.frame_index = (self.frame_index + 1) % len(self.animations[self.direction])
+                self.image = self.animations[self.direction][self.frame_index]
+                self.rect.center = (self.x+self.tile_size//2, self.y+self.tile_size//2)
             
+            self.last_move = current_time
+
+class EnemyType2(Enemy):
+    '''
+    Enemigo de nivel intermedio, hereda de la clase Enemy su constructor.
+    El comportamiento de este enemigo se basa en seguir al jugador en un rango especifico,
+    si el jugador se encuentra dentro de ese rango lo persigue, caso contrario sigue su movimiento de manera
+    aleatoria
+    '''
+    def __init__(self, row, col, grid, player):
+        super().__init__(row, col, characters['MidEnemy'], constans.CELL_SIZE)
+        self.grid = grid
+        self.player = player
+
+        self.grid[row][col]='E'
+        self.movement_time = 1000
+
+        self.frame_rate = 200
+
+        self.moved = False
+
+        self.last_direction = self.direction
+
+        self.range = 2
+
+    def is_player_in_range(self):
+        '''
+        Verifica si se encuentra el jugador en el area de "vision" del enemigo
+        '''
+        for i in range(-self.range, self.range + 1):
+            for j in range(-self.range, self.range + 1):
+                row = self.row + i
+                col = self.col + j
+
+                if 0 <= row < len(self.grid) and 0 <= col < len(self.grid[0]):
+                    if self.grid[row][col] == 'J':
+                        return True
+        return False
+    
+    def random_move(self):
+        '''Movimiento aleatorio verificando espacio libres'''
+        current_time = pygame.time.get_ticks()
+        directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+        dx, dy = random.choice(directions)
+
+        # Asignar dirección para la animación
+        if dy == -1:
+            self.direction = 'top'
+        elif dy == 1:
+            self.direction = 'bottom'
+        elif dx == -1:
+            self.direction = 'left'
+        elif dx == 1:
+            self.direction = 'right'
+
+        if current_time - self.last_move > self.movement_time:
+            new_row = self.row + dy
+            new_col = self.col + dx
+
+            # Validar límites del mapa
+            if (0 <= new_row < len(self.grid) and
+                0 <= new_col < len(self.grid[0]) and
+                self.grid[new_row][new_col] == 0):
+
+                self.grid[self.row][self.col] = 0
+                self.row = new_row
+                self.col = new_col
+                self.grid[self.row][self.col] = 'E'
+
+                self.x = self.col * self.tile_size
+                self.y = constans.OFFSET_Y + self.row * self.tile_size
+
+                self.rect.center = (self.x + self.tile_size // 2, self.y + self.tile_size // 2)
+                self.moved = True
+                self.last_direction = self.direction
+            self.last_move = current_time
+
+    def follow_player(self):
+        '''
+        Seguir al jugador evitando los obstaculos a toda costa
+        '''
+        current_time = pygame.time.get_ticks()
+        directions = []
+
+        distance_row = self.player.row - self.row
+        distance_col = self.player.col - self.col
+        if abs(distance_row) >= abs(distance_col):
+            if distance_row < 0:
+                directions.append((-1, 0))  # arriba
+            if distance_row > 0:
+                directions.append((1, 0))   # abajo
+            if distance_col < 0:
+                directions.append((0, -1))  # izquierda
+            if distance_col > 0:
+                directions.append((0, 1))   # derecha
+        else:
+            if distance_col < 0:
+                directions.append((0, -1))
+            if distance_col > 0:
+                directions.append((0, 1))
+            if distance_row < 0:
+                directions.append((-1, 0))
+            if distance_row > 0:
+                directions.append((1, 0))
+        
+        if current_time - self.last_move > self.movement_time:
+            for dy, dx in directions:
+                new_row = self.row + dy
+                new_col = self.col + dx
+
+                if (
+                    0 <= new_row < len(self.grid) and
+                    0 <= new_col < len(self.grid[0]) and
+                    self.grid[new_row][new_col] in [0, 'J']
+                ):
+                    # Definir dirección solo si se mueve realmente
+                    if dy == -1:
+                        self.direction = 'top'
+                    elif dy == 1:
+                        self.direction = 'bottom'
+                    elif dx == -1:
+                        self.direction = 'left'
+                    elif dx == 1:
+                        self.direction = 'right'
+
+                    self.grid[self.row][self.col] = 0
+                    self.row = new_row
+                    self.col = new_col
+                    self.grid[self.row][self.col] = 'E'
+
+                    self.x = self.col * self.tile_size
+                    self.y = constans.OFFSET_Y + self.row * self.tile_size
+                    self.rect.center = (self.x + self.tile_size // 2, self.y + self.tile_size // 2)
+
+                    self.moved = True
+                    self.last_direction = self.direction
+                    break  # No intentar más direcciones
+
+            self.last_move = current_time
+            
+    def update(self):
+        current_time = pygame.time.get_ticks()
+
+        if self.is_player_in_range():
+            self.follow_player()
+        if not self.is_player_in_range():
+            self.random_move()
+
+        if current_time - self.last_frame > self.frame_rate:
+            if self.moved:
+                self.frame_index = (self.frame_index + 1) % len(self.animations[self.direction])
+                self.image = self.animations[self.direction][self.frame_index]
+                self.moved = False
+            else:
+                self.frame_index = (self.frame_index + 1) % len(self.animations[self.last_direction])
+                self.image = self.animations[self.last_direction][self.frame_index]
+            self.last_frame = current_time 
+
+class EnemyType3(EnemyType2):
+    def __init__(self, row, col, grid, player):
+        super().__init__(row, col, grid, player)                  

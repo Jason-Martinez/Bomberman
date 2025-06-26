@@ -39,7 +39,7 @@ def load_character_animations(imgs_paths):
             top.append(img)
         
         animations = {
-            'botton': botton,
+            'bottom': botton,
             'left': left,
             'right': right,
             'top': top
@@ -59,15 +59,22 @@ fast_bomber = load_character_animations(get_path(os.path.join('Assets', 'charact
 normal_bomber = load_character_animations(get_path(os.path.join('Assets', 'characters', 'NormalChar')))
 strong_bomber = load_character_animations(get_path(os.path.join('Assets', 'characters', 'StrongChar')))
 
+#Cargar las animaciones de los enemigos
+easy_en = load_character_animations(get_path(os.path.join('Assets', 'enemy_characters', 'nivel1')))
+mid_en = load_character_animations(get_path(os.path.join('Assets', 'enemy_characters', 'nivel2')))
+
 characters = {
     'FastChar': fast_bomber,
     'NormalChar': normal_bomber,
-    'StrongChar': strong_bomber
+    'StrongChar': strong_bomber,
+    'EasyEnemy': easy_en,
+    'MidEnemy': mid_en
 }
 
 all_animations = {
     'bombs': load_animations(get_path(os.path.join('Assets', 'bombs'))),
-    'explotions': load_animations(get_path(os.path.join('Assets', 'explotions')), 100)
+    'explotions': load_animations(get_path(os.path.join('Assets', 'explotions')), 100),
+    'portal': load_animations(get_path(os.path.join('Assets', 'portal')))
 }
 if __name__ == "__main__":
     all_animations

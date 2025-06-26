@@ -101,7 +101,7 @@ MAP4_INDESTRUCTIBLE = [
 ]
 
 BGS = get_path(os.path.join('Assets', 'tiles'))
-PORTAL = get_path(os.path.join('Assets', 'portal'))
+KEY_PATH = 'Assets\Key\key.png'
 IMGS = {
     'box': pygame.image.load(BGS[0]),
     'grass': pygame.image.load(BGS[1]),
