@@ -23,15 +23,16 @@ class Users_data:
 
     def save_or_update_user(self, score=0, skin=0):
         data = self.load_data()
-        Users_data = {"user": self.username, "score": score, "skin": skin}
+        user_data = {"user": self.username, "score": score, "skin": skin}
         for i, entry in enumerate(data):
-            if entry in enumerate(data):
-                if entry.get("user") == self.username:
-                    data[i] = Users_data
-                    break
-        
+            if entry.get("user") == self.username:
+                # Solo cambia la skin, mantiene el score
+                user_data["score"] = entry.get("score", 0)
+                data[i] = user_data
+                break
         else:
-            data.append(Users_data)
+            # Si no existe, lo agrega
+            data.append(user_data)
         self.save_data(data)
 
 
