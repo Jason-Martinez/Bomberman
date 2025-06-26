@@ -33,6 +33,7 @@ class Retro_star_screen:
         self.run()
         
     def create_menu(self):
+        #configuracion del tema visual del menu
         theme = pygame_menu.themes.Theme(
             background_color=COLOR_FONDO,
             title_background_color=COLOR_FONDO,
@@ -43,7 +44,7 @@ class Retro_star_screen:
             widget_font_size=30,
             widget_font_color=COLOR_TEXTO,
             widget_alignment=pygame_menu.locals.ALIGN_CENTER, # alineación de widgets
-            widget_margin=(0, 20),
+            widget_margin=(0, 20), #espacio vertical entre botones
             selection_color=(255, 255, 0)  # Color de fondo al hacer hover (amarillo)
         )
 
@@ -142,6 +143,8 @@ class Retro_star_screen:
         selected_skin = 0
         player_name = ""
         input_active = False
+        msg = ""
+        msg_timer = 0
 
         # Cargar y escalar skins
         skin_paths = [
@@ -151,7 +154,7 @@ class Retro_star_screen:
         ]
         img_size = int(WINDOW_HEIGHT * 0.18)
         skins = [pygame.transform.scale(pygame.image.load(path), (img_size, img_size)) for path in skin_paths]
-        skin_names = ["Red", "Blue", "Green"]
+        skin_names = ["NORMAL", "STRONG", "FAST"]
 
         # Fuentes
         title_font = pygame.font.Font(FUENTE_RETRO, 32)
@@ -173,7 +176,7 @@ class Retro_star_screen:
 
             # Nombre del jugador
             label = label_font.render("Player Name:", True, WHITE)
-            self.surface.blit(label, (WINDOW_WIDTH//2 - 180, 110))
+            self.surface.blit(label, (WINDOW_WIDTH//2 - 260, 110))
             # Caja de texto
             input_box = pygame.Rect(WINDOW_WIDTH//2 - 60, 105, 220, 36)
             pygame.draw.rect(self.surface, (70, 136, 180) if input_active else (100, 100, 100), input_box, 0, border_radius=6)
@@ -204,6 +207,14 @@ class Retro_star_screen:
             pygame.draw.rect(self.surface, (180, 70, 70), back_rect, border_radius=8)
             back_text = button_font.render("BACK", True, WHITE)
             self.surface.blit(back_text, (back_rect.x + btn_w//2 - back_text.get_width()//2, back_rect.y + 8))
+            # ...dibuja botones y demás...
+
+            # Mostrar mensaje si está activo
+            if msg and pygame.time.get_ticks() - msg_timer < 2000:
+                msg_surface = label_font.render(msg, True, (0, 255, 0))
+                self.surface.blit(msg_surface, (WINDOW_WIDTH//2 - msg_surface.get_width()//2, int(WINDOW_HEIGHT*0.75)))
+            elif msg and pygame.time.get_ticks() - msg_timer >= 2000:
+                msg = ""
 
             pygame.display.flip()
 
@@ -235,9 +246,14 @@ class Retro_star_screen:
                         if player_name.strip() != "":
                             # Guardar usuario usando Users_data
                             user = Users_data(player_name.strip())
-                            user.save_or_update_user(score=0, skin=selected_skin)
-                            self.start_game()
-                            return
+                            existing = user.get_user()
+                            if existing:
+                                 user.save_or_update_user(score=existing.get("score", 0), skin=selected_skin)
+                            else:
+                                user.save_or_update_user(score=0, skin=selected_skin)
+                            msg = "Chance applied!"
+                            msg_timer = pygame.time.get_ticks()
+     
                     if back_rect.collidepoint(event.pos):
                         running = False
 
@@ -263,7 +279,7 @@ class Retro_star_screen:
             self.surface.fill(COLOR_FONDO)
             self.surface.blit(title_text, text_rect)
 
-            # Mostrar los puntajes alineados manualmente sin usar ':' que puede generar errores visuales
+            # Mostrar los puntajes alineados
             for i, entry in enumerate(top5):
                 name = entry.get('user', '')
                 score = entry.get('score', 0)
@@ -350,9 +366,9 @@ class Retro_star_screen:
 
             # Nombres y carnets debajo de cada foto
             name1 = font_mini.render("Mainor Oliver Martinez Sanchez", True, WHITE)
-            id1 = font_mini.render("Carnet: 2022000001", True, WHITE)
+            id1 = font_mini.render("Carnet: 2025094482", True, WHITE)
             name2 = font_mini.render("Jason Rene Martinez Gutierrez", True, WHITE)
-            id2 = font_mini.render("Carnet: 2022000002", True, WHITE)
+            id2 = font_mini.render("Carnet: 2025105665", True, WHITE)
 
             # Debajo de la foto izquierda
             self.surface.blit(name1, (50, 185))
