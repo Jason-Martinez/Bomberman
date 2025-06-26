@@ -75,6 +75,7 @@ class Retro_star_screen:
 
         while running:
 
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
