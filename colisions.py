@@ -31,14 +31,14 @@ class CollisionHandler:
             for _ in hits:
                 self.player.hp -= 25
 
-    def player_to_bullet_(self):
+    def player_to_bullet(self):
         hits = pygame.sprite.groupcollide(self.player_group, self.bullet_group, False, True)
         if hits:
             for _ in hits:
                 self.player.hp -= 25
 
     def update(self):
-        self.check_key_collision()
-        self.check_portal_collision()
-        self.check_enemy_collision()
-        self.check_bullet_collision()
+        self.player_to_key()
+        self.player_to_bullet()
+        self.player_to_enemy()
+        self.player_to_portal()
