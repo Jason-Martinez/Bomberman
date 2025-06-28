@@ -3,6 +3,11 @@ import pygame
 import os
 
 #Scalas y tamaño de pantalla, celdas, personajes, etc.
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+TITLE = "             Bomberman" 
+
+FUENTE_RETRO = os.path.join('Assets', 'fonts', 'Minecraftia-Regular.ttf') 
 WIDTH = 800
 HEIGHT = 640
 CELL_SIZE = 32
@@ -18,7 +23,10 @@ COLORS = {
     'BLACK': (0, 0, 0),
     'RED': (255, 0, 0),
     'GREEN': (0, 255, 0),
-    'GRAY': (128, 128, 128)
+    'GRAY': (128, 128, 128),
+    'BG': (50, 50, 100),
+    'TITLE': (255, 255, 0),
+    'YELLOW': (255, 255, 0),
 }
 
 #Barras

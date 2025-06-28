@@ -1,7 +1,7 @@
 import json
 import os
 
-SCORES_PATH = "Bomberman/assets/data/scores.json"
+SCORES_PATH = os.path.join('Assets', 'data', 'scores.json')
 class Users_data:
     def __init__(self,username):
         self.username = username.strip()
@@ -34,8 +34,6 @@ class Users_data:
             # Si no existe, lo agrega
             data.append(user_data)
         self.save_data(data)
-
-
             
     def get_top5(self):
         data = self.load_data()
