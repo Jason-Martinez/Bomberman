@@ -1,1 +1,8 @@
 venv
+.venv
+
+.gitignore
+
+__pycache__
+Prueba.py 
+prueba2.py
