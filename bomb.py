@@ -35,7 +35,7 @@ class Explosion(pygame.sprite.Sprite):
             self.kill()
 
 class Bomb(pygame.sprite.Sprite):
-    def __init__(self, row, col, grid, screen, tile_size, player_instance_ref, all_sprites, object_group, enemy_group):
+    def __init__(self, row, col, grid, screen, tile_size, player_instance_ref, all_sprites, object_group, enemy_group, score):
         super().__init__()
         self.row = row
         self.col = col
@@ -45,6 +45,7 @@ class Bomb(pygame.sprite.Sprite):
         self.all_sprites = all_sprites  # Grupo de sprites para agregar explosiones
         self.group = object_group
         self.enemy_group = enemy_group
+        self.score = score
 
         self.x, self.y = self.col * self.tile_size, constans.OFFSET_Y + self.row * self.tile_size
         self.rect = pygame.Rect(self.x, self.y, self.tile_size, self.tile_size)
@@ -123,7 +124,7 @@ class Bomb(pygame.sprite.Sprite):
         directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
         for dx_dir, dy_dir in directions:
-            for i in range(1, self.range + 1):
+            for i in range(0, self.range + 1):
                 target_x = self.col + (dx_dir * i)
                 target_y = self.row + (dy_dir * i)
 
@@ -153,7 +154,7 @@ class Bomb(pygame.sprite.Sprite):
                     self._apply_destruction(target_x, target_y, grid_width, grid_height)
                 elif cell_type == 'E':
                     for enemy in self.enemy_group:
-                        if enemy.row == target_y and enemy.col == target_x:
+                        if (enemy.row == target_y and enemy.col == target_x):
                             enemy.hp -= self.player.dammage
                             if enemy.hp <= 0:
                                 if enemy.type == 'boss':
@@ -161,6 +162,7 @@ class Bomb(pygame.sprite.Sprite):
                                     self.group.add(llave)
                                     self.all_sprites.add(llave)
                                 self.grid[enemy.row][enemy.col] = 0
+                                self.score.add_score(enemy.points)
                                 enemy.kill()
                                                          
     def _apply_destruction(self, x, y, grid_width, grid_height):
@@ -173,6 +175,4 @@ class Bomb(pygame.sprite.Sprite):
         if self.grid[y][x] == 2:
             self.grid[y][x] = 0
         if self.grid[y][x] == 'LS':
-            self.grid[y][x] = 0
-        if self.grid[y][x] == 'E':
             self.grid[y][x] = 0
