@@ -3,7 +3,7 @@ import pygame
 import constans
 class Player(pygame.sprite.Sprite):
     '''Clase para manejar al jugador'''
-    def __init__(self, row, col, grid, screen, tile_size, ambientation,hp=100):
+    def __init__(self, row, col, grid, screen, tile_size, ambientation, skin=0):
         super().__init__()
         self.row = row
         self.col = col
@@ -13,19 +13,35 @@ class Player(pygame.sprite.Sprite):
         self.ambientation = ambientation
 
         # --- Caracteristicas del jugador ---
-        self.hp = hp
-        self.max_hp = self.hp
+        if skin == 0:
+            self.hp = 100
+            self.max_hp = self.hp
+            self.dammage = 50
+            self.animations = characters['NormalChar']
+            self.move_delay = 500
+        elif skin == 1:
+            self.hp = 150
+            self.max_hp = self.hp
+            self.dammage = 75
+            self.animations = characters['StrongChar']
+            self.move_delay = 750
+        elif skin == 2:
+            self.hp = 100
+            self.max_hp = self.hp
+            self.dammage = 50
+            self.animations = characters['FastChar']
+            self.move_delay = 250
+
+
         self.existKey = False
         self.existbomb = False
-        self.total_bombs = 10
-        self.dammage = 50
-
+        self.total_bombs = 0
         # --- Conversion de posiciones de la matriz en pixeles ---
         self.posi_x = self.col * self.tile_size
         self.posi_y = constans.OFFSET_Y + self.row * self.tile_size
         
         # --- Variables para controlar el movimiento celda a celda ---
-        self.move_delay = 100
+
         self.original_move_delay = self.move_delay 
         self.last_move = pygame.time.get_ticks()   
 
@@ -36,7 +52,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = 'bottom' 
         
         # Cargar imágenes del personaje y sus animaciones respectivas
-        self.animations = characters['StrongChar'] 
+         
         self.image = self.animations[self.direction][self.frame]
         
         # El rect ahora se basa en la imagen cargada o en tile_size

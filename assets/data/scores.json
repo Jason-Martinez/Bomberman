@@ -18,5 +18,10 @@
         "user": "Juan",
         "score": 400,
         "skin": 0
+    },
+    {
+        "user": "jason",
+        "score": 100,
+        "skin": 2
     }
 ]
