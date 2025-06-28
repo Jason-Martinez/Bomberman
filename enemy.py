@@ -52,6 +52,7 @@ class EnemyType1(Enemy):
         self.hp = 50
         self.hp_max = self.hp
         self.type = 'easy'
+        self.points = 100
 
     def update(self):
         current_time = pygame.time.get_ticks()
@@ -103,6 +104,7 @@ class EnemyType2(Enemy):
         self.hp = 100
         self.hp_max = self.hp
         self.type = 'mid'
+        self.points = 250
 
         self.grid[row][col]='E'
         self.movement_time = 1000
@@ -266,6 +268,7 @@ class EnemyType3(EnemyType2):
         self.hp = 150
         self.hp_max = self.hp
         self.type = 'hard'
+        self.points = 400
 
         self.last_shoot = pygame.time.get_ticks()
         self.shoot_rate = 2000
@@ -406,6 +409,7 @@ class Boss(EnemyType3):
         self.hp = 500
         self.hp_max = self.hp
         self.type = 'boss'
+        self.points = 1000
 
         self.fase = 1
 

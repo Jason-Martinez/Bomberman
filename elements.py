@@ -72,4 +72,11 @@ class StageIntro:
 
         # Texto centrado
         self.screen.blit(self.rendered_text, self.rect)
-        return True    
+        return True 
+
+class ScoreManager:
+    'Clase del puntaje en pantalla'
+    def __init__(self):
+        self.score = 0
+    def add_score(self, points):
+        self.score += points

@@ -101,14 +101,15 @@ class Maps:
                     self.ambientacion[row][col] = 'H'
     
     def draw(self, tile_size):
-        tupla = ('J', 0, 'E', 'V', 'H')  
+        walkable = ('J', 0, 'E') 
+        destrutibles = (2, 'LS') 
         for row in range(constans.ROWS):
             for col in range(constans.COLS):
                 pos_y = constans.OFFSET_Y + row * tile_size
-                if self.matriz[row][col] == 2:
+                if self.matriz[row][col] in destrutibles:
                     self.surface.blit(constans.SCALE_IMS['box'], (col * tile_size, pos_y, tile_size, tile_size))
                 
-                if self.matriz[row][col] in tupla:
+                if self.matriz[row][col] in walkable:
                     self.surface.blit(self.img_walK, (col * tile_size, pos_y, tile_size, tile_size))
                     if self.ambientacion[row][col] == 'V':
                         self.surface.blit(constans.SCALE_IMS['poison'], (col * tile_size, pos_y, tile_size, tile_size))
@@ -117,4 +118,3 @@ class Maps:
                 
                 elif self.matriz[row][col] == 1:
                     self.surface.blit(self.img_indestructible, (col * tile_size, pos_y, tile_size, tile_size))
-
