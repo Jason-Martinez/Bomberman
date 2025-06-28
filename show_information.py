@@ -8,11 +8,11 @@ def draw_text(surface, text, size, x, y):
     text_rect.midtop=(x, y)
     surface.blit(text_surface, text_rect)
 
-def status_bar(surface, x, y, status, max_status, color):
+def status_bar(surface, x, y, status, max_status, color, bar_len=BAR_LEN, bar_height=BAR_HEIGHT):
     '''Crea una barra de estadisticas (Vida, escudos, etc.). Status es el valor actual y 
     max_status es el maximo posible'''
-    fill = (status / max_status) * BAR_LEN
-    border = pygame.Rect(x, y, BAR_LEN, BAR_HEIGHT)
-    fill = pygame.Rect(x, y, fill, BAR_HEIGHT)
+    fill = (status / max_status) * bar_len
+    border = pygame.Rect(x, y, bar_len, bar_height)
+    fill = pygame.Rect(x, y, fill, bar_height)
     pygame.draw.rect(surface, color, fill)
     pygame.draw.rect(surface, COLORS['WHITE'], border, 1)

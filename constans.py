@@ -99,16 +99,74 @@ MAP4_INDESTRUCTIBLE = [
     (22, 3), (22, 9), (22, 10), (22, 16),
     (23, 3)
 ]
+PORTAL_POS = [(3, 10), (8, 23), (8, 9), (16, 1)]
+MAP1_AMBIENTE = {
+    'V': [
+        (5, 6), (5, 7), (5, 8), (6, 6), (6, 7), (7, 7), (7, 8),
+        (8, 7), (9, 7), (10, 7), (10, 8), (11, 8), (12, 8)
+    ],
+    'H': [
+        (15, 10), (15, 11), (15, 12),
+        (16, 10), (16, 11), (16, 12), (17, 11), (17, 12),
+        (18, 11), (19, 11), (20, 11)
+    ]
+}
+
+MAP2_AMBIENTE = {
+    'V': [
+        (3, 3), (3, 5), (3, 7), (3, 9),
+        (5, 3), (5, 5), (5, 7), (5, 9),
+        (7, 3), (7, 5), (7, 7), (7, 9)
+    ],
+    'H': [
+        (9, 3), (9, 5), (9, 7), (9, 9),
+        (11, 3), (11, 5), (11, 7), (11, 9),
+        (13, 3), (13, 5), (13, 7), (13, 9)
+    ]
+}
+
+MAP3_AMBIENTE = {
+    'V': [
+        (3, 14), (4, 14), (5, 14),
+        (6, 14), (7, 14)
+    ],
+    'H': [
+        (8, 2), (8, 3), (8, 4)
+    ]
+}
+
+MAP4_AMBIENTE = {
+    'V': [
+        (6, 18), (6, 19), (6, 20),
+        (7, 18), (7, 19), (7, 20),
+        (8, 18), (8, 19), (8, 20)
+    ],
+    'H': [
+        (11, 21), (11, 22), (11, 23),
+        (12, 21), (12, 22), (12, 23),
+        (13, 21), (13, 22), (13, 23)
+    ]
+}
 
 BGS = get_path(os.path.join('Assets', 'tiles'))
 KEY_PATH = 'Assets\Key\key.png'
 IMGS = {
     'box': pygame.image.load(BGS[0]),
     'grass': pygame.image.load(BGS[1]),
-    'stone': pygame.image.load(BGS[2])
+    'stone': pygame.image.load(BGS[6]),
+    'sand': pygame.image.load(BGS[5]),
+    'volcano_stone': pygame.image.load(BGS[7]),
+    'land': pygame.image.load(BGS[3]),
+    'ice': pygame.image.load(BGS[2]),
+    'poison': pygame.image.load(BGS[4]),
 }
 SCALE_IMS = {
     'box': pygame.transform.scale(IMGS['box'], (CELL_SIZE, CELL_SIZE)),
     'grass': pygame.transform.scale(IMGS['grass'], (CELL_SIZE, CELL_SIZE)),
-    'stone': pygame.transform.scale(IMGS['stone'], (CELL_SIZE, CELL_SIZE))
+    'stone': pygame.transform.scale(IMGS['stone'], (CELL_SIZE, CELL_SIZE)),
+    'sand': pygame.transform.scale(IMGS['sand'], (CELL_SIZE, CELL_SIZE)),
+    'volcano_stone': pygame.transform.scale(IMGS['volcano_stone'], (CELL_SIZE, CELL_SIZE)),
+    'land': pygame.transform.scale(IMGS['land'], (CELL_SIZE, CELL_SIZE)),
+    'ice': pygame.transform.scale(IMGS['ice'], (CELL_SIZE, CELL_SIZE)),
+    'poison': pygame.transform.scale(IMGS['poison'], (CELL_SIZE, CELL_SIZE))
 }
